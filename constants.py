@@ -1,3 +1,5 @@
+import os
+
 MAX_RAFFLES = 1000
 
 COLORS = [
@@ -18,3 +20,5 @@ COLORS = [
 COLORS_LEN = len(COLORS)
 
 RAFFLE_PADDING = 25
+
+INIT_FILE_PATH = os.path.abspath('.init')

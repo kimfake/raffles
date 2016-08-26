@@ -1,8 +1,12 @@
 from flask import Flask, request, render_template, redirect, url_for
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 
 from forms import RaffleForm
-from models import db, get_db_uri, User
-from utils import assign_raffles_to_user
+from models import db, get_db_uri, User, Raffle
+from utils import assign_raffles_to_user, seed_raffles_into_db
+
 
 """
 basically a website the asks a perosn to enter their email
@@ -12,9 +16,16 @@ how many raffles generates them sends the generatred raffle to their email
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
 app.config['SECRET_KEY'] = 'some-random-secret-key'
+
 db.app = app
 db.init_app(app)
+db.create_all()
+seed_raffles_into_db()
 
+
+admin = Admin(app, name='raffles', template_mode='bootstrap3')
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Raffle, db.session))
 
 @app.route('/', methods=['GET', 'POST'])
 def home():

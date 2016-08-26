@@ -1,5 +1,6 @@
 # utility functions go here
 import random
+import os
 from uuid import uuid4
 
 import constants
@@ -15,6 +16,11 @@ def generate_raffles(count):
 
 
 def seed_raffles_into_db(max_raffles=constants.MAX_RAFFLES):
+    if is_inited():
+        print 'Raffles have already been seeded...'
+        return False
+    from app import db
+    print 'Seeding raffles...'
     for raffle_colour, raffle_up1, raffle_up2 in generate_raffles(max_raffles):
         raffle = Raffle(
             colour=raffle_colour,
@@ -25,6 +31,7 @@ def seed_raffles_into_db(max_raffles=constants.MAX_RAFFLES):
         db.session.add(raffle)
 
     db.session.commit()
+    mark_as_inited()
     return True
 
 
@@ -36,6 +43,14 @@ def get_unused_raffles(raffle_count):
             constants.RAFFLE_PADDING + raffle_count
         )
     ).all()
+
+
+def mark_as_inited():
+    open(constants.INIT_FILE_PATH, 'w').close()
+
+
+def is_inited():
+    return os.path.exists(constants.INIT_FILE_PATH)
 
 
 def assign_raffles_to_user(raffle_count, user):
