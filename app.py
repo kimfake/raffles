@@ -7,11 +7,26 @@ from forms import RaffleForm
 from models import db, get_db_uri, User, Raffle
 from utils import assign_raffles_to_user, seed_raffles_into_db
 
+from flask import Flask
+from flask_mail import Mail
+from flask_mail import Message
 
-"""
-basically a website the asks a perosn to enter their email
-how many raffles generates them sends the generatred raffle to their email
-"""
+app = Flask (__name__)
+mail = Mail(app)
+mail = Mail() 
+
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'yourId@gmail.com'
+app.config['MAIL_PASSWORD'] = '*****'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
+
+
+   
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = get_db_uri()
