@@ -5,6 +5,9 @@ from uuid import uuid4
 
 import constants
 from models import Raffle, User
+from flask_mail import Mail
+from flask_mail import Message
+from app import mail
 
 
 def generate_raffles(count):
@@ -58,7 +61,15 @@ def assign_raffles_to_user(raffle_count, user):
     raffles = get_unused_raffles(raffle_count)
     for raffle in random.sample(raffles, raffle_count):
         print "Assigning {0} to {1}".format(raffle, user)
-        raffle.user = user
+    msg = Message('Raffle assigned', sender = 'osman.soloking009@outlook.com', recipients = [user.email]) 
+    msg.body = "Hello Flask message sent from Flask-Mail"
+    mail.send(msg)
+    
+    raffle.user = users
+
+
+        
+
 
     db.session.commit()
     return True
